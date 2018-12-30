@@ -1,6 +1,5 @@
-
-# Created by https://www.gitignore.io/api/git,haskell,visualstudiocode
-# Edit at https://www.gitignore.io/?templates=git,haskell,visualstudiocode
+# Created by https://www.gitignore.io/api/git,haskell,visualstudiocode,macos
+# Edit at https://www.gitignore.io/?templates=git,haskell,visualstudiocode,macos
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
@@ -41,6 +40,34 @@ cabal.project.local~
 .HTF/
 .ghc.environment.*
 
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
@@ -55,4 +82,7 @@ cabal.project.local~
 ### Stack
 .stack-work
 
-# End of https://www.gitignore.io/api/git,haskell,visualstudiocode
+# Scarpper-login-test
+me.ini
+
+# End of https://www.gitignore.io/api/git,haskell,visualstudiocode,macos
