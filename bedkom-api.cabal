@@ -1,58 +1,100 @@
-name:                bedkom-api
-version:             0.1.0.0
--- synopsis:
--- description:
-homepage:            https://github.com/jonastriki/bedkom-api#readme
-license:             BSD3
-license-file:        LICENSE
-author:              Jonas Triki
-maintainer:          jonas@triki.no
-copyright:           2018 Jonas Triki
-category:            Web
-build-type:          Simple
-extra-source-files:  README.md
-cabal-version:       >=1.10
+cabal-version: 1.12
 
-library
-  hs-source-dirs:      src, src/utils
-  exposed-modules:     Lib
-  build-depends:       base >= 4.7 && < 5
-                     , aeson
-                     , servant-server
-                     , wai
-                     , warp
-                     , ini
-                     , text
-                     , wreq
-                     , lens
-                     , aeson-lens
-                     , tagsoup
-                     , regex
-                     , html-entities
-                     , bytestring
-  default-language:    Haskell2010
+-- This file has been generated from package.yaml by hpack version 0.31.1.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 0dd0fbead14b4ea87a75ff1f066f15634e197fd29db9cbfa49b13f7adde078b3
 
-executable bedkom-api-exe
-  hs-source-dirs:      app
-  main-is:             Main.hs
-  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
-  build-depends:       base
-                     , bedkom-api
-  default-language:    Haskell2010
-
-test-suite bedkom-api-test
-  type:                exitcode-stdio-1.0
-  hs-source-dirs:      test
-  main-is:             Spec.hs
-  build-depends:       base
-                     , bedkom-api
-                     , hspec
-                     , hspec-wai
-                     , hspec-wai-json
-                     , aeson
-  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
-  default-language:    Haskell2010
+name:           bedkom-api
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/JonasTriki/bedkom-api#readme>
+homepage:       https://github.com/https://github.com/JonasTriki/bedkom-api#readme
+bug-reports:    https://github.com/https://github.com/JonasTriki/bedkom-api/issues
+author:         Jonas Triki
+maintainer:     jonas@triki.no
+copyright:      2019 Jonas Triki
+license:        GPL-3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
 
 source-repository head
-  type:     git
-  location: https://github.com/jonastriki/bedkom-api
+  type: git
+  location: https://github.com/https://github.com/JonasTriki/bedkom-api
+
+library
+  exposed-modules:
+      Lib
+      Scrapper
+  other-modules:
+      Paths_bedkom_api
+  hs-source-dirs:
+      src
+      src/utils
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , html-entities
+    , ini
+    , lens
+    , regex
+    , servant-server
+    , tagsoup
+    , text
+    , wai
+    , warp
+    , wreq
+  default-language: Haskell2010
+
+executable bedkom-api-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_bedkom_api
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bedkom-api
+    , bytestring
+    , html-entities
+    , ini
+    , lens
+    , regex
+    , servant-server
+    , tagsoup
+    , text
+    , wai
+    , warp
+    , wreq
+  default-language: Haskell2010
+
+test-suite bedkom-api-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_bedkom_api
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bedkom-api
+    , bytestring
+    , html-entities
+    , ini
+    , lens
+    , regex
+    , servant-server
+    , tagsoup
+    , text
+    , wai
+    , warp
+    , wreq
+  default-language: Haskell2010
