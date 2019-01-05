@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8a17533b769b83aca07c5d92edb6ebda35c9added861abf505bb1317153cc2a9
+-- hash: 8f059b242fc5342ecc543af34481fed049c79f13edbf430836ebf7f20a8ef89a
 
 name:           bedkom-api
 version:        0.1.0.0
@@ -40,6 +40,7 @@ library
     , bytestring
     , containers
     , html-entities
+    , http-client
     , ini
     , lens
     , regex-tdfa
@@ -65,6 +66,7 @@ executable bedkom-api-exe
     , bytestring
     , containers
     , html-entities
+    , http-client
     , ini
     , lens
     , regex-tdfa
@@ -91,6 +93,7 @@ test-suite bedkom-api-test
     , bytestring
     , containers
     , html-entities
+    , http-client
     , ini
     , lens
     , regex-tdfa

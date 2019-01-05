@@ -27,6 +27,7 @@ dependencies:
 - servant-server
 - wai
 - warp
+- http-client
 - ini
 - text
 - wreq

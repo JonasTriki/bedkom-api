@@ -1,48 +1,48 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE OverloadedStrings    #-}
 
 module Scrapper where
 
-import Control.Lens hiding (re)
-import Control.Monad (sequence)
-import Data.Aeson (toJSON)
-import qualified Data.ByteString as B
-import qualified Data.ByteString.Char8 as C
-import qualified Data.ByteString.Lazy as BL
-import Data.Ini hiding (sections)
-import Data.List (find)
-import qualified Data.Map as Map
-import Data.Maybe (fromJust)
-import qualified Data.Text as T
-import qualified Data.Text.Lazy as L
-import Data.Text.Lazy.Builder (toLazyText)
-import Data.Text.Lazy.Encoding
-import HTMLEntities.Decoder
-import Network.Wreq
-import qualified Network.Wreq.Session as Sess
-import Text.HTML.TagSoup
-import Text.Regex.TDFA
+import           Control.Lens            hiding (re)
+import           Control.Monad           (sequence)
+import           Data.Aeson              (toJSON)
+import qualified Data.ByteString.Lazy    as BL
+import           Data.Ini                hiding (sections)
+import           Data.List               (find)
+import qualified Data.Map                as Map
+import           Data.Maybe              (fromJust)
+import qualified Data.Text               as T
+import qualified Data.Text.Lazy          as L
+import           Data.Text.Lazy.Builder  (toLazyText)
+import           Data.Text.Lazy.Encoding
+import           HTMLEntities.Decoder
+import qualified Network.HTTP.Client     as HTTP
+import           Network.Wreq
+import qualified Network.Wreq.Session    as Sess
+import           Text.HTML.TagSoup
+import           Text.Regex.TDFA
 
+readCredentials :: IO (T.Text, T.Text)
 readCredentials = do
   iniFile <- readIniFile "me.ini"
   let feidename = iniFile >>= lookupValue "DEFAULT" "feidename"
       password = iniFile >>= lookupValue "DEFAULT" "password"
   case sequence [feidename, password] of
     Right [fn, pwd] -> return (fn, pwd) -- Is tuple needed?
-    Left err -> error err
+    Left err        -> error err
 
 nameValuePair tag = (fromAttrib "name" tag, fromAttrib "value" tag)
 
+toByteString :: [Tag BL.ByteString] -> BL.ByteString
 toByteString = encodeUtf8 . toLazyText . htmlEncodedText . L.toStrict . decodeUtf8 . renderTags
 
 toFormParams :: [(BL.ByteString, BL.ByteString)] -> [FormParam]
 toFormParams = map (\(k, v) -> BL.toStrict k := v)
 
-toParams :: [(BL.ByteString, BL.ByteString)] -> Options
-toParams = foldl (\acc (k, v) -> acc & param ((L.toStrict . decodeUtf8) k) .~ [(L.toStrict . decodeUtf8) v]) defaults
+findFirstPairAttrib :: [Tag BL.ByteString] -> (BL.ByteString, BL.ByteString) -> BL.ByteString -> BL.ByteString
+findFirstPairAttrib tags pair attrib = fromAttrib attrib . fromJust $ find (~== TagOpen "" [pair]) tags
 
-fetchStudy :: Sess.Session -> IO ()
+fetchStudy :: Sess.Session -> IO BL.ByteString
 fetchStudy sess = do
   loginRes <- Sess.get sess "https://fsweb.no/studentweb/login.jsf?inst=FSUIB"
   (feidename, password) <- readCredentials
@@ -56,12 +56,12 @@ fetchStudy sess = do
       pairs = tags ++ [(aKey, aVal)]
       fields = toFormParams pairs
   -- Then we send the post request to the login jsf
-  resp <- Sess.customHistoriedPayloadMethodWith "POST" defaults sess "https://fsweb.no/studentweb/login.jsf" fields
-  print $ resp ^. hrFinalRequest
-  {-- loginPost <- Sess.post sess "https://fsweb.no/studentweb/login.jsf" fields
-  let tags = parseTags $ loginPost ^. responseBody
-      asLen = fromAttrib "value" . fromJust $ find (~== TagOpen "" [("name", "asLen")]) tags
-      authState = fromAttrib "value" . fromJust $ find (~== TagOpen "" [("name", "AuthState")]) tags
+  loginPostHistoryResp <-
+    Sess.customHistoriedPayloadMethodWith "POST" defaults sess "https://fsweb.no/studentweb/login.jsf" fields
+  let finalReqUrl = show . HTTP.getUri $ loginPostHistoryResp ^. hrFinalRequest
+      tags = parseTags $ loginPostHistoryResp ^. (hrFinalResponse . responseBody)
+      asLen = findFirstPairAttrib tags ("name", "asLen") "value"
+      authState = findFirstPairAttrib tags ("name", "AuthState") "value"
   -- Now we assemble the login post payload
       loginPostPayload =
         [ "asLen" := asLen
@@ -72,11 +72,18 @@ fetchStudy sess = do
         , "feidename" := feidename
         , "password" := password
         ]
-  -- B.writeFile "test.html" $ BL.toStrict $ loginPost ^. responseBody
-  -- print loginPostPayload --}
-  print "ok"
+  -- And send the POST request with the payload above
+  loginPostRes <- Sess.post sess finalReqUrl loginPostPayload
+  let tags = parseTags $ loginPostRes ^. responseBody
+      finalPostPayload = ["SAMLResponse" := findFirstPairAttrib tags ("name", "SAMLResponse") "value"]
+  -- Finally, we sign in to StudentWeb
+  studentWeb <- Sess.post sess "https://fsweb.no/studentweb/samlsso.jsf" finalPostPayload
+  currentStudies <- Sess.get sess "https://fsweb.no/studentweb/studier.jsf"
+  let tags = parseTags $ currentStudies ^. responseBody
+      studyTitle = fromTagText . fromJust $ find isTagText $ dropWhile (~/= "<span class=studieTittel>") tags
+  return studyTitle
 
 scrap :: IO ()
 scrap = do
   sess <- Sess.newSession
-  fetchStudy sess
+  fetchStudy sess >>= print
