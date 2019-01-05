@@ -31,9 +31,10 @@ dependencies:
 - text
 - wreq
 - tagsoup
-- regex
+- regex-tdfa
 - html-entities
 - bytestring
+- containers
 
 library:
   source-dirs:
