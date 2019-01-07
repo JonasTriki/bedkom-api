@@ -1,10 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell   #-}
 
-module StudyPrograms
-  ( parseProgram
-  ) where
+module StudyPrograms where
 
 import qualified Data.Text.Lazy as L
+
+import           Control.Lens
 
 type Year = Int
 
@@ -62,10 +63,16 @@ instance Show Program where
   show Unknown = "Ukjent"
 
 data InformaticsStudy = InformaticsStudy
-  { semester :: Semester
-  , program  :: Program
+  { _semester :: Semester
+  , _program  :: Program
   } deriving (Show, Eq)
+
+makeLenses ''InformaticsStudy
 
 parseProgram :: (ProgramStr, Year, SemesterStr) -> InformaticsStudy
 parseProgram (programStr, year, semesterStr) =
-  InformaticsStudy {semester = strYearToSemester semesterStr year, program = strToProgram programStr}
+  InformaticsStudy {_semester = strYearToSemester semesterStr year, _program = strToProgram programStr}
+
+isInformaticsStudent :: Program -> Bool
+isInformaticsStudent Unknown = False
+isInformaticsStudent _       = True

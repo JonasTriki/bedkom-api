@@ -37,7 +37,6 @@ dependencies:
 - bytestring
 - containers
 - uri-bytestring
-- uri-encode
 
 library:
   source-dirs:

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8eb680199610c420ea5129c32c058084eee541e711b40811ca31cfda109adb11
+-- hash: b5095c083618ea84b4334affa08069d26ad17570db5a054098fd6f583a7eecc9
 
 name:           bedkom-api
 version:        0.1.0.0
@@ -50,7 +50,6 @@ library
     , tagsoup
     , text
     , uri-bytestring
-    , uri-encode
     , wai
     , warp
     , wreq
@@ -79,7 +78,6 @@ executable bedkom-api-exe
     , tagsoup
     , text
     , uri-bytestring
-    , uri-encode
     , wai
     , warp
     , wreq
@@ -109,7 +107,6 @@ test-suite bedkom-api-test
     , tagsoup
     , text
     , uri-bytestring
-    , uri-encode
     , wai
     , warp
     , wreq

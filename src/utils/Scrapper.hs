@@ -1,6 +1,5 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 {-# LANGUAGE OverloadedStrings    #-}
-{-# LANGUAGE Strict               #-}
 
 module Scrapper
   ( scrap
@@ -15,14 +14,13 @@ import qualified Data.ByteString.Lazy     as BL
 import           Data.Ini                 hiding (sections)
 import           Data.List                (find)
 import qualified Data.Map                 as Map
-import           Data.Maybe               (fromJust)
+import           Data.Maybe               (catMaybes, fromJust)
 import qualified Data.Text                as T
 import qualified Data.Text.Lazy           as L
 import           Data.Text.Lazy.Builder   (toLazyText)
 import           Data.Text.Lazy.Encoding
 import           HTMLEntities.Decoder
 import qualified Network.HTTP.Client      as HTTP
-import           Network.URI.Encode
 import           Network.Wreq
 import qualified Network.Wreq.Session     as Sess
 import qualified StudyPrograms            as SP
@@ -30,6 +28,10 @@ import           Text.HTML.Scalpel.Core
 import           Text.HTML.TagSoup
 import           Text.Regex.TDFA
 import           URI.ByteString
+
+type Feidename = T.Text
+
+type Password = T.Text
 
 readCredentials :: IO (T.Text, T.Text)
 readCredentials = do
@@ -40,6 +42,7 @@ readCredentials = do
     Right [fn, pwd] -> return (fn, pwd) -- Is tuple needed?
     Left err        -> error err
 
+nameValuePair :: Tag BL.ByteString -> (BL.ByteString, BL.ByteString)
 nameValuePair tag = (fromAttrib "name" tag, fromAttrib "value" tag)
 
 urlDecodeBS :: BL.ByteString -> BL.ByteString
@@ -72,10 +75,10 @@ scrapContainers =
         return . Just $ SP.parseProgram (study, year, semester)
       else return Nothing
 
-fetchStudy :: Sess.Session -> IO BL.ByteString
-fetchStudy sess = do
+fetchStudies :: Feidename -> Password -> IO [SP.InformaticsStudy]
+fetchStudies feidename password = do
+  sess <- Sess.newSession
   loginRes <- Sess.get sess "https://fsweb.no/studentweb/login.jsf?inst=FSUIB"
-  (feidename, password) <- readCredentials
   -- First we fetch fields we need to send to login
   let extraRe = "mojarra\\.jsfcljs\\(.*{'(.*)':'(.*)'}.*\\)"
       feideModuleBox =
@@ -109,19 +112,11 @@ fetchStudy sess = do
   -- Finally, we sign in to StudentWeb
   studentWeb <- Sess.post sess "https://fsweb.no/studentweb/samlsso.jsf" finalPostPayload
   currentStudies <- Sess.get sess "https://fsweb.no/studentweb/studier.jsf"
-  let studies = scrapeStringLike (currentStudies ^. responseBody) scrapContainers
-      {---tags = parseTags $ currentStudies ^. responseBody
-      containers = partitions (~== "<a class=studieContainer />") tags
-      studieContainer = fromAttrib "href" . fromJust $ find (~== "<a class=studieContainer>") tags -- TODO: Find find all matches of container, not just one
-      parsedRef = parseRelativeRef strictURIParserOptions $ BL.toStrict studieContainer
-      queryPairs =
-        case parsedRef of
-          Left err  -> error $ show err
-          Right ref -> ref ^. (queryL . queryPairsL)--}
-  print studies
-  return "ok"
+  -- Now we scrap the studyprogram-containers and fetch all the students studies in a list
+  let studies = catMaybes . fromJust $ scrapeStringLike (currentStudies ^. responseBody) scrapContainers
+  return studies
 
 scrap :: IO ()
 scrap = do
-  sess <- Sess.newSession
-  fetchStudy sess >>= print
+  (feidename, password) <- readCredentials
+  fetchStudies feidename password >>= print
