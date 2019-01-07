@@ -119,4 +119,10 @@ fetchStudies feidename password = do
 scrap :: IO ()
 scrap = do
   (feidename, password) <- readCredentials
-  fetchStudies feidename password >>= print
+  studies <- fetchStudies feidename password
+  print studies
+  putStrLn $
+    "Is informatics student?: " ++
+    (if SP.isInformaticsStudent studies
+       then "Yes"
+       else "No")

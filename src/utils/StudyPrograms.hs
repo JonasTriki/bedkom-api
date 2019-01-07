@@ -73,6 +73,5 @@ parseProgram :: (ProgramStr, Year, SemesterStr) -> InformaticsStudy
 parseProgram (programStr, year, semesterStr) =
   InformaticsStudy {_semester = strYearToSemester semesterStr year, _program = strToProgram programStr}
 
-isInformaticsStudent :: Program -> Bool
-isInformaticsStudent Unknown = False
-isInformaticsStudent _       = True
+isInformaticsStudent :: [InformaticsStudy] -> Bool
+isInformaticsStudent = foldr (\i -> (||) (view program i /= Unknown)) False
