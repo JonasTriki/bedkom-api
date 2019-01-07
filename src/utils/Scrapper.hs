@@ -1,26 +1,35 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 {-# LANGUAGE OverloadedStrings    #-}
+{-# LANGUAGE Strict               #-}
 
-module Scrapper where
+module Scrapper
+  ( scrap
+  ) where
 
-import           Control.Lens            hiding (re)
-import           Control.Monad           (sequence)
-import           Data.Aeson              (toJSON)
-import qualified Data.ByteString.Lazy    as BL
-import           Data.Ini                hiding (sections)
-import           Data.List               (find)
-import qualified Data.Map                as Map
-import           Data.Maybe              (fromJust)
-import qualified Data.Text               as T
-import qualified Data.Text.Lazy          as L
-import           Data.Text.Lazy.Builder  (toLazyText)
+import           Control.Lens             hiding (re)
+import           Control.Monad            (sequence)
+import           Data.Aeson               (toJSON)
+import qualified Data.ByteString.Char8    as C
+import qualified Data.ByteString.Internal as BS (c2w, w2c)
+import qualified Data.ByteString.Lazy     as BL
+import           Data.Ini                 hiding (sections)
+import           Data.List                (find)
+import qualified Data.Map                 as Map
+import           Data.Maybe               (fromJust)
+import qualified Data.Text                as T
+import qualified Data.Text.Lazy           as L
+import           Data.Text.Lazy.Builder   (toLazyText)
 import           Data.Text.Lazy.Encoding
 import           HTMLEntities.Decoder
-import qualified Network.HTTP.Client     as HTTP
+import qualified Network.HTTP.Client      as HTTP
+import           Network.URI.Encode
 import           Network.Wreq
-import qualified Network.Wreq.Session    as Sess
+import qualified Network.Wreq.Session     as Sess
+import qualified StudyPrograms            as SP
+import           Text.HTML.Scalpel.Core
 import           Text.HTML.TagSoup
 import           Text.Regex.TDFA
+import           URI.ByteString
 
 readCredentials :: IO (T.Text, T.Text)
 readCredentials = do
@@ -33,14 +42,35 @@ readCredentials = do
 
 nameValuePair tag = (fromAttrib "name" tag, fromAttrib "value" tag)
 
+urlDecodeBS :: BL.ByteString -> BL.ByteString
+urlDecodeBS = encodeUtf8 . toLazyText . htmlEncodedText . L.toStrict . decodeUtf8
+
 toByteString :: [Tag BL.ByteString] -> BL.ByteString
-toByteString = encodeUtf8 . toLazyText . htmlEncodedText . L.toStrict . decodeUtf8 . renderTags
+toByteString = urlDecodeBS . renderTags
 
 toFormParams :: [(BL.ByteString, BL.ByteString)] -> [FormParam]
 toFormParams = map (\(k, v) -> BL.toStrict k := v)
 
 findFirstPairAttrib :: [Tag BL.ByteString] -> (BL.ByteString, BL.ByteString) -> BL.ByteString -> BL.ByteString
 findFirstPairAttrib tags pair attrib = fromAttrib attrib . fromJust $ find (~== TagOpen "" [pair]) tags
+
+scrapContainers =
+  chroots ("a" @: [hasClass "studieContainer"]) $ do
+    urlQuery <- attr "href" anySelector
+    divs <- chroots "div" $ text anySelector
+    let [_, status] = getAllTextSubmatches $ (divs !! 1) =~ "Status: (.*)" :: [BL.ByteString]
+    if status == "Aktiv"
+      then do
+        let parsedRef = parseRelativeRef strictURIParserOptions $ BL.toStrict urlQuery
+            queryPairs =
+              case parsedRef of
+                Left err  -> error $ show err
+                Right ref -> ref ^. (queryL . queryPairsL)
+            study = decodeUtf8 . BL.fromStrict $ fromJust $ lookup "studprog" queryPairs
+            year = fst . fromJust . C.readInt . fromJust $ lookup "arstall" queryPairs
+            semester = decodeUtf8 . BL.fromStrict . fromJust $ lookup "termin" queryPairs
+        return . Just $ SP.parseProgram (study, year, semester)
+      else return Nothing
 
 fetchStudy :: Sess.Session -> IO BL.ByteString
 fetchStudy sess = do
@@ -79,9 +109,17 @@ fetchStudy sess = do
   -- Finally, we sign in to StudentWeb
   studentWeb <- Sess.post sess "https://fsweb.no/studentweb/samlsso.jsf" finalPostPayload
   currentStudies <- Sess.get sess "https://fsweb.no/studentweb/studier.jsf"
-  let tags = parseTags $ currentStudies ^. responseBody
-      studyTitle = fromTagText . fromJust $ find isTagText $ dropWhile (~/= "<span class=studieTittel>") tags
-  return studyTitle
+  let studies = scrapeStringLike (currentStudies ^. responseBody) scrapContainers
+      {---tags = parseTags $ currentStudies ^. responseBody
+      containers = partitions (~== "<a class=studieContainer />") tags
+      studieContainer = fromAttrib "href" . fromJust $ find (~== "<a class=studieContainer>") tags -- TODO: Find find all matches of container, not just one
+      parsedRef = parseRelativeRef strictURIParserOptions $ BL.toStrict studieContainer
+      queryPairs =
+        case parsedRef of
+          Left err  -> error $ show err
+          Right ref -> ref ^. (queryL . queryPairsL)--}
+  print studies
+  return "ok"
 
 scrap :: IO ()
 scrap = do

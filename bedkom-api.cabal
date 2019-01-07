@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8f059b242fc5342ecc543af34481fed049c79f13edbf430836ebf7f20a8ef89a
+-- hash: 8eb680199610c420ea5129c32c058084eee541e711b40811ca31cfda109adb11
 
 name:           bedkom-api
 version:        0.1.0.0
@@ -29,6 +29,7 @@ library
   exposed-modules:
       Lib
       Scrapper
+      StudyPrograms
   other-modules:
       Paths_bedkom_api
   hs-source-dirs:
@@ -44,9 +45,12 @@ library
     , ini
     , lens
     , regex-tdfa
+    , scalpel-core
     , servant-server
     , tagsoup
     , text
+    , uri-bytestring
+    , uri-encode
     , wai
     , warp
     , wreq
@@ -70,9 +74,12 @@ executable bedkom-api-exe
     , ini
     , lens
     , regex-tdfa
+    , scalpel-core
     , servant-server
     , tagsoup
     , text
+    , uri-bytestring
+    , uri-encode
     , wai
     , warp
     , wreq
@@ -97,9 +104,12 @@ test-suite bedkom-api-test
     , ini
     , lens
     , regex-tdfa
+    , scalpel-core
     , servant-server
     , tagsoup
     , text
+    , uri-bytestring
+    , uri-encode
     , wai
     , warp
     , wreq

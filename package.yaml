@@ -23,7 +23,6 @@ dependencies:
 - base >= 4.7 && < 5
 - lens
 - aeson
-# - aeson-lens
 - servant-server
 - wai
 - warp
@@ -32,10 +31,13 @@ dependencies:
 - text
 - wreq
 - tagsoup
+- scalpel-core
 - regex-tdfa
 - html-entities
 - bytestring
 - containers
+- uri-bytestring
+- uri-encode
 
 library:
   source-dirs:
