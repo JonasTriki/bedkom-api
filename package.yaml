@@ -25,6 +25,7 @@ dependencies:
 - aeson
 - servant-server
 - wai
+- wai-logger
 - warp
 - http-client
 - ini
@@ -37,6 +38,9 @@ dependencies:
 - bytestring
 - containers
 - uri-bytestring
+- serverless-haskell
+- wai-gateway
+- convertible
 
 library:
   source-dirs:

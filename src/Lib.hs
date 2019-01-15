@@ -1,30 +1,38 @@
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DataKinds       #-}
 {-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE TypeOperators   #-}
 
 module Lib
   ( startApp
   , app
   ) where
 
-import Data.Aeson
-import Data.Aeson.TH
-import Network.Wai
-import Network.Wai.Handler.Warp
-import Servant
+import           Data.Aeson
+import           Data.Aeson.TH
+import           Network.Wai
+import           Network.Wai.Handler.Warp
+import           Network.Wai.Logger       (withStdoutLogger)
+import           Servant
 
 data User = User
-  { userId :: Int
+  { userId        :: Int
   , userFirstName :: String
-  , userLastName :: String
+  , userLastName  :: String
   } deriving (Eq, Show)
 
 $(deriveJSON defaultOptions ''User)
 
 type API = "users" :> Get '[ JSON] [User]
 
+port :: Int
+port = 8080
+
 startApp :: IO ()
-startApp = run 8080 app
+startApp = do
+  putStrLn $ "Running API on localhost @ port " ++ show port
+  withStdoutLogger $ \aplogger -> do
+    let settings = setPort port $ setLogger aplogger defaultSettings
+    runSettings settings app
 
 app :: Application
 app = serve api server
