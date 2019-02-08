@@ -164,8 +164,9 @@ Temporary Items
 ### Stack
 .stack-work
 
-# Scarpper-login-test
-me.ini
+# Ini config files
+*.ini
+!*-template.ini
 
 ### Node ###
 # Logs
