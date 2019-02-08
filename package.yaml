@@ -45,10 +45,10 @@ dependencies:
 library:
   source-dirs:
     - src
-    - src/utils
     - src/models
     - src/routes
     - src/routes/users
+    - src/routes/users/utils
 
 executables:
   bedkom-api-exe:

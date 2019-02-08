@@ -5,10 +5,12 @@ module Menu
   ( Menu
   ) where
 
-import           Data.Text    (Text)
+import           Data.Text     (Text)
 
 import           Control.Lens
-import           FoodEntry    (FoodEntry)
+import           Data.Aeson
+import           Data.Aeson.TH
+import           FoodEntry     (FoodEntry)
 
 data Menu = Menu
   { _id          :: Text
@@ -17,3 +19,5 @@ data Menu = Menu
   } deriving (Show, Eq)
 
 makeLenses ''Menu
+
+$(deriveJSON defaultOptions ''Menu)

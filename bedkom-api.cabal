@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c604663e97d7879f47087aafc41236abafa373d3cdbf202b3e7003380878c5a6
+-- hash: 10e47b7031e6e0c57d6b8d47792ba9c6075877f048144a10d0761829505e915f
 
 name:           bedkom-api
 version:        0.1.0.0
@@ -28,24 +28,28 @@ source-repository head
 library
   exposed-modules:
       Lib
-      Scrapper
+      ApiResponse
       Company
       Dot
       FoodEntry
       InformaticsStudy
       Menu
       Presentation
+      RegisterUserBody
       User
+      Api
       Login
       Register
+      Users
+      Scrapper
   other-modules:
       Paths_bedkom_api
   hs-source-dirs:
       src
-      src/utils
       src/models
       src/routes
       src/routes/users
+      src/routes/users/utils
   build-depends:
       aeson
     , base >=4.7 && <5

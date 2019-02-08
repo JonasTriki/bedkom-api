@@ -5,9 +5,11 @@ module Company
   ( Company
   ) where
 
-import           Data.Text    (Text)
+import           Data.Text     (Text)
 
 import           Control.Lens
+import           Data.Aeson
+import           Data.Aeson.TH
 
 data Company = Company
   { _id          :: Text
@@ -18,3 +20,5 @@ data Company = Company
   } deriving (Show, Eq)
 
 makeLenses ''Company
+
+$(deriveJSON defaultOptions ''Company)

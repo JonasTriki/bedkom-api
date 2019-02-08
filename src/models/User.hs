@@ -8,6 +8,8 @@ module User
 import           Data.Text        (Text)
 
 import           Control.Lens
+import           Data.Aeson
+import           Data.Aeson.TH
 import           InformaticsStudy (InformaticsStudy)
 
 data User = User
@@ -21,3 +23,5 @@ data User = User
   } deriving (Show, Eq)
 
 makeLenses ''User
+
+$(deriveJSON defaultOptions ''User)

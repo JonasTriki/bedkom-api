@@ -9,6 +9,8 @@ import           Data.Text        (Text)
 
 import           Company          (Company)
 import           Control.Lens
+import           Data.Aeson
+import           Data.Aeson.TH
 import           InformaticsStudy (Semester)
 import           Menu             (Menu)
 import           User             (User)
@@ -27,3 +29,5 @@ data Presentation = Presentation
   } deriving (Show, Eq)
 
 makeLenses ''Presentation
+
+$(deriveJSON defaultOptions ''Presentation)

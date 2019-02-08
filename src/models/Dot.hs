@@ -8,6 +8,8 @@ module Dot
 import           Data.Text        (Text)
 
 import           Control.Lens
+import           Data.Aeson
+import           Data.Aeson.TH
 import           InformaticsStudy (Semester)
 
 data Dot = Dot
@@ -18,3 +20,5 @@ data Dot = Dot
   } deriving (Show, Eq)
 
 makeLenses ''Dot
+
+$(deriveJSON defaultOptions ''Dot)

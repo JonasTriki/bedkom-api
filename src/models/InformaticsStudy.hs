@@ -6,6 +6,8 @@ module InformaticsStudy where
 import qualified Data.Text.Lazy as L
 
 import           Control.Lens
+import           Data.Aeson
+import           Data.Aeson.TH
 
 type Year = Int
 
@@ -21,6 +23,8 @@ data Semester
 instance Show Semester where
   show (Autumn year) = "Vår " ++ show year
   show (Spring year) = "Høst " ++ show year
+
+$(deriveJSON defaultOptions ''Semester)
 
 strYearToSemester :: SemesterStr -> Year -> Semester
 strYearToSemester semesterStr year =
@@ -62,12 +66,16 @@ instance Show Program where
   show MAMN_PROG = "Felles masterprogram i programutvikling"
   show Unknown = "Ukjent"
 
+$(deriveJSON defaultOptions ''Program)
+
 data InformaticsStudy = InformaticsStudy
   { _semester :: Semester
   , _program  :: Program
   } deriving (Show, Eq)
 
 makeLenses ''InformaticsStudy
+
+$(deriveJSON defaultOptions ''InformaticsStudy)
 
 parseProgram :: (ProgramStr, Year, SemesterStr) -> InformaticsStudy
 parseProgram (programStr, year, semesterStr) =
