@@ -23,7 +23,7 @@ import           HTMLEntities.Decoder
 import qualified Network.HTTP.Client      as HTTP
 import           Network.Wreq
 import qualified Network.Wreq.Session     as Sess
-import qualified StudyPrograms            as SP
+import qualified InformaticsStudy            as SP
 import           Text.HTML.Scalpel.Core
 import           Text.HTML.TagSoup
 import           Text.Regex.TDFA

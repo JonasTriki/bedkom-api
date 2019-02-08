@@ -46,6 +46,9 @@ library:
   source-dirs:
     - src
     - src/utils
+    - src/models
+    - src/routes
+    - src/routes/users
 
 executables:
   bedkom-api-exe:

@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell   #-}
 
-module StudyPrograms where
+module InformaticsStudy where
 
 import qualified Data.Text.Lazy as L
 
