@@ -1,0 +1,23 @@
+service: myservice
+app: bedkom-api
+tenant: triki
+
+provider:
+  name: aws
+  runtime: haskell
+
+functions:
+  myfunc:
+    handler: bedkom-api.bedkom-api-exe
+    events:
+      - http:
+          path: /
+          method: ANY
+          cors: true
+      - http:
+          path: /{proxy+}
+          method: ANY
+          cors: true
+
+plugins:
+  - serverless-haskell

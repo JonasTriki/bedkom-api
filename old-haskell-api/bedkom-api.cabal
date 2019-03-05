@@ -1,0 +1,174 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.1.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 4715d6a78cb3a0641179fdaef4ce0443f60e0ffdfcfe71293ae4d426c4e2624b
+
+name:           bedkom-api
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/JonasTriki/bedkom-api#readme>
+homepage:       https://github.com/https://github.com/JonasTriki/bedkom-api#readme
+bug-reports:    https://github.com/https://github.com/JonasTriki/bedkom-api/issues
+author:         Jonas Triki
+maintainer:     jonas@triki.no
+copyright:      2019 Jonas Triki
+license:        GPL-3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/https://github.com/JonasTriki/bedkom-api
+
+library
+  exposed-modules:
+      Lib
+      ApiResponse
+      Company
+      Dot
+      FoodEntry
+      InformaticsStudy
+      Menu
+      Presentation
+      RegisterUserBody
+      Semester2
+      User
+      Connection
+      Schema
+      Semester
+      StudyProgram
+      UserRole
+      Api
+      Login
+      Register
+      Users
+      Scrapper
+  other-modules:
+      Paths_bedkom_api
+  hs-source-dirs:
+      src
+      src/models
+      src/sql
+      src/routes
+      src/routes/users
+      src/routes/users/utils
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bytestring
+    , config-ini
+    , containers
+    , convertible
+    , esqueleto
+    , html-entities
+    , http-api-data
+    , http-client
+    , ini
+    , lens
+    , monad-logger
+    , mtl
+    , persistent
+    , persistent-postgresql
+    , persistent-template
+    , regex-tdfa
+    , scalpel-core
+    , servant-server
+    , serverless-haskell
+    , tagsoup
+    , text
+    , time
+    , uri-bytestring
+    , wai
+    , wai-gateway
+    , wai-logger
+    , warp
+    , wreq
+  default-language: Haskell2010
+
+executable bedkom-api-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_bedkom_api
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bedkom-api
+    , bytestring
+    , config-ini
+    , containers
+    , convertible
+    , esqueleto
+    , html-entities
+    , http-api-data
+    , http-client
+    , ini
+    , lens
+    , monad-logger
+    , mtl
+    , persistent
+    , persistent-postgresql
+    , persistent-template
+    , regex-tdfa
+    , scalpel-core
+    , servant-server
+    , serverless-haskell
+    , tagsoup
+    , text
+    , time
+    , uri-bytestring
+    , wai
+    , wai-gateway
+    , wai-logger
+    , warp
+    , wreq
+  default-language: Haskell2010
+
+test-suite bedkom-api-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_bedkom_api
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aeson
+    , base >=4.7 && <5
+    , bedkom-api
+    , bytestring
+    , config-ini
+    , containers
+    , convertible
+    , esqueleto
+    , html-entities
+    , http-api-data
+    , http-client
+    , ini
+    , lens
+    , monad-logger
+    , mtl
+    , persistent
+    , persistent-postgresql
+    , persistent-template
+    , regex-tdfa
+    , scalpel-core
+    , servant-server
+    , serverless-haskell
+    , tagsoup
+    , text
+    , time
+    , uri-bytestring
+    , wai
+    , wai-gateway
+    , wai-logger
+    , warp
+    , wreq
+  default-language: Haskell2010

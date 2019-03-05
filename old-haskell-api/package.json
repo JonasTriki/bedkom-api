@@ -1,0 +1,26 @@
+{
+  "name": "bedkom-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JonasTriki/bedkom-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JonasTriki/bedkom-api/issues"
+  },
+  "homepage": "https://github.com/JonasTriki/bedkom-api#readme",
+  "dependencies": {
+    "serverless": "^1.36.1",
+    "serverless-haskell": "^0.8.5"
+  }
+}

@@ -1,14 +1,21 @@
-service: myservice
-app: bedkom-api
+app: bedkom
 tenant: triki
+service: bedkom-api
 
 provider:
   name: aws
-  runtime: haskell
+  profile: default
+  runtime: nodejs8.10
+
+  stage: ${opt:stage, 'dev'}
+  region: eu-central-1
+
+plugins:
+  - serverless-offline
 
 functions:
-  myfunc:
-    handler: bedkom-api.bedkom-api-exe
+  app:
+    handler: main.handler
     events:
       - http:
           path: /
@@ -18,6 +25,5 @@ functions:
           path: /{proxy+}
           method: ANY
           cors: true
-
-plugins:
-  - serverless-haskell
+    environment:
+      NODE_ENV: ${self:provider.stage}
