@@ -1,4 +1,4 @@
-import { Model, Schema } from "dynamoose";
+import { Schema } from "dynamoose";
 import db from "../db";
 import Semesters from "./enums/Semesters";
 import StudyPrograms from "./enums/StudyPrograms";

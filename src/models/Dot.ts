@@ -2,17 +2,23 @@ import { Schema } from "dynamoose";
 import db from "../db";
 import Semesters from "./enums/Semesters";
 
-interface LastAuthorized {
+interface Dot {
     id: string;
+    userId: string;
     year: number;
     semester: string;
+    comment: string;
 }
 
-const LastAuthorizedModel = db.model<LastAuthorized, string>("bedkom-last-authorized-users", new Schema({
+const DotModel = db.model<Dot, string>("bedkom-dots", new Schema({
     id: {
         type: String,
         required: true,
         hashKey: true
+    },
+    userId: {
+        type: String,
+        required: true,
     },
     year: {
         type: Number,
@@ -22,7 +28,11 @@ const LastAuthorizedModel = db.model<LastAuthorized, string>("bedkom-last-author
         type: String,
         required: true,
         enum: Semesters
+    },
+    comment: {
+        type: String,
+        required: true
     }
 }));
 
-export default LastAuthorizedModel;
+export default DotModel;

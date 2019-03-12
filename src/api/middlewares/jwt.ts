@@ -4,11 +4,15 @@ import jwt from "jsonwebtoken";
 import config from "../../config";
 import responses from "../../responses";
 
-export interface JWTRequest extends Request {
-    jwt: JWTPayload;
+declare global {
+    namespace Express {
+        interface Request {
+            jwt: JWTPayload;
+        }
+    }
 }
 
-const verifyJWTToken = (req: JWTRequest, res: Response, next: NextFunction) => {
+const verifyJWTToken = (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
         responses.unauthorized(res);
         return;

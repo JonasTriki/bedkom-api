@@ -18,7 +18,6 @@ import           Semester2
 import           Servant
 import           Web.FormUrlEncoded (FromForm)
 
--- TODO: What to do here?
 {-- currentSemester :: IO Semester
 currentSemester = do
   let (year, month, day) = getCurrentTime >>= return . toGregorian . utctDay

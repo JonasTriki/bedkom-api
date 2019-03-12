@@ -1,20 +1,21 @@
 import argon2 from "argon2";
-import { Request, Response, Router } from "express";
-import { body, validationResult } from "express-validator/check";
-import { v4 } from "uuid";
+import {Request, Response, Router} from "express";
+import {body, validationResult} from "express-validator/check";
+import {v4} from "uuid";
 import LastAuthorizedModel from "../../../models/LastAuthorized";
 import UserModel from "../../../models/user";
 import VerificationTokenModel from "../../../models/VerificationToken";
 import responses from "../../../responses";
-import { currentSemesterYear } from "../../../utils/dateTime";
-import { fetchInformaticsStudent } from "../../../utils/fsLogin";
+import {currentSemesterYear} from "../../../utils/dateTime";
+import {fetchInformaticsStudent} from "../../../utils/fsLogin";
+import {vOrg, vPassword, vUsername} from "../../../validators";
 
 const router = Router();
 
 const inputValidator = [
-    body("username").isString().custom((value) => value.length === 6),
-    body("password").isString(),
-    body("org").isIn(["uib", "hvl"]),
+    vUsername,
+    vPassword,
+    vOrg,
     body("verificationToken").isUUID(4).optional()
 ];
 
@@ -24,7 +25,7 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
         return responses.badRequest(req, res);
     }
 
-    const { username, password, org, verificationToken } = req.body;
+    const {username, password, org, verificationToken} = req.body;
 
     // Check if user already exists
     const user = await UserModel.get(username);
@@ -34,7 +35,6 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
     if (exists) {
 
         // Verify that the student is verified this semester
-        // TODO: Check entry in LastAuthorized
         const lastAuth = await LastAuthorizedModel.get(user.id);
 
         if (lastAuth.year !== curSemYear.year || lastAuth.semester !== curSemYear.semester) {
@@ -124,7 +124,7 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
             } else {
                 token = curVerToken.token;
             }
-            responses.accepted({ token }, "password-setup", res);
+            responses.accepted({token}, "password-setup", res);
         }
     }
 });

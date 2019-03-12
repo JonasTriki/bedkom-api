@@ -1,19 +1,18 @@
-import { Request, Response, response, Router } from "express";
-import { body, validationResult } from "express-validator/check";
-import jwt from "jsonwebtoken";
-import config from "../../../config";
+import {Request, Response, Router} from "express";
+import {validationResult} from "express-validator/check";
 import LastAuthorized from "../../../models/LastAuthorized";
 import UserModel from "../../../models/user";
 import responses from "../../../responses";
-import { currentSemesterYear } from "../../../utils/dateTime";
-import { fetchInformaticsStudent } from "../../../utils/fsLogin";
+import {currentSemesterYear} from "../../../utils/dateTime";
+import {fetchInformaticsStudent} from "../../../utils/fsLogin";
+import {vOrg, vPassword, vUsername} from "../../../validators";
 
 const router = Router();
 
 const inputValidator = [
-    body("username").isString().custom((value) => value.length === 6),
-    body("password").isString(),
-    body("org").isIn(["uib", "hvl"])
+    vUsername,
+    vPassword,
+    vOrg,
 ];
 
 router.post("/", inputValidator, async (req: Request, res: Response) => {
@@ -22,7 +21,7 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
         return responses.badRequest(req, res);
     }
 
-    const { username, password, org } = req.body;
+    const {username, password, org} = req.body;
 
     // Check that user already exists
     const user = await UserModel.get(username);
@@ -31,7 +30,7 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
         return;
     }
 
-    // Fetch studentdetails
+    // Fetch student details
     const student = await fetchInformaticsStudent(username, password, org);
     if (!student || student.studies.length === 0) {
         responses.badRequest(req, res);

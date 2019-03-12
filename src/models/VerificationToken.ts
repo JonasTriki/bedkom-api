@@ -1,8 +1,8 @@
-import { Model, Schema } from "dynamoose";
+import {Schema} from "dynamoose";
 import db from "../db";
 import Semesters from "./enums/Semesters";
 import StudyPrograms from "./enums/StudyPrograms";
-import { User } from "./User";
+import {User} from "./User";
 
 interface VerificationToken extends User {
     token: string;
@@ -45,6 +45,6 @@ const VerificationTokenModel = db.model<VerificationToken, string>("bedkom-verif
             required: true,
             enum: Semesters
         },
-    }, { expires: 24 * 60 * 60 })); /* Tokens expire after 1 day */
+    }, {expires: 24 * 60 * 60})); /* Tokens expire after 1 day */
 
 export default VerificationTokenModel;

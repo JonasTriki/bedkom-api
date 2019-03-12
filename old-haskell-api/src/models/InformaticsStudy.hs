@@ -23,7 +23,6 @@ strYearToSemester semesterStr year =
     then Spring year
     else Autumn year
 
--- TODO: Abstract Program to its own .hs file
 data Program
   = BAMN_DTEK
   | BAMN_DSIK

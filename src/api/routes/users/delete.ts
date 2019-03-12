@@ -1,17 +1,17 @@
-import { NextFunction, Request, Response, Router } from "express";
-import { body, validationResult } from "express-validator/check";
+import {NextFunction, Request, Response, Router} from "express";
+import {validationResult} from "express-validator/check";
 import LastAuthorizedModel from "../../../models/LastAuthorized";
 import UserModel from "../../../models/user";
 import responses from "../../../responses";
-import { JWTRequest } from "../../middlewares/jwt";
+import {vUsername} from "../../../validators";
 
 const router = Router();
 
 const inputValidator = [
-    body("username").isString().custom((value) => value.length === 6)
+    vUsername,
 ];
 
-router.delete("/", inputValidator, async (req: JWTRequest, res: Response, next: NextFunction) => {
+router.delete("/", inputValidator, async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return responses.badRequest(req, res);
@@ -22,8 +22,8 @@ router.delete("/", inputValidator, async (req: JWTRequest, res: Response, next: 
     next();
 });
 
-router.delete("/", inputValidator, async (req: JWTRequest, res: Response) => {
-    const { username } = req.body;
+router.delete("/", inputValidator, async (req: Request, res: Response) => {
+    const {username} = req.body;
 
     // Check that user already exists
     const user = await UserModel.get(username);

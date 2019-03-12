@@ -4,14 +4,16 @@
 const dev = {
 
     // AWS DynamoDb URL
-    dbPrefix: "dev-",
+    awsPrefix: "dev-",
 
+    // Bypassing JWT auth endpoints in dev
+    jtwMasterToken: "TODO",
 };
 
 const prod = {
 
     // AWS DynamoDb URL
-    dbPrefix: "prod-",
+    awsPrefix: "prod-",
 };
 
 const config = process.env.NODE_ENV === "prod" ? prod : dev;

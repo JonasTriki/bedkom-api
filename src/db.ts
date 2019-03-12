@@ -11,7 +11,7 @@ dynamoose.AWS.config.update({
 dynamoose.setDefaults({
     create: true,
     update: true,
-    prefix: config.dbPrefix
+    prefix: config.awsPrefix
 });
 
 logger.info("DynamoDB connected!");
