@@ -1,11 +1,11 @@
 import { Router } from "express";
 import verifyJWTToken from "../../middlewares/jwt";
+import deregister from "./deregister";
 import register from "./register";
-import unregister from "./unregister";
 const router = Router();
 
 router.use(verifyJWTToken);
 router.use("/register", register);
-router.use("/unregister", unregister);
+router.use("/deregister", deregister);
 
 export default router;
