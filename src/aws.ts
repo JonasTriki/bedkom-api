@@ -12,16 +12,16 @@ const s3 = new S3({
     },
 });
 
-const uploadToS3 = (file: Express.Multer.File): Promise<string> => {
+const uploadToS3 = (file: Express.Multer.File, name?: string): Promise<string> => {
     return new Promise((resolve, reject) => {
-        const filename = v4() + path.extname(file.originalname);
+        const filename = (name || v4()) + path.extname(file.originalname);
 
         s3.upload({
             ACL: "public-read",
             Bucket: bucketName,
             Key: filename,
             Body: file.buffer,
-            CacheControl: "max-age=31536000", // TODO: Change this from 1year to a reasonable cache age.
+            CacheControl: "max-age=31536000", // TODO: Change this from 1 year to a reasonable cache age?
         }, (err, data) => {
             if (err) {
                 reject(err);
@@ -32,6 +32,7 @@ const uploadToS3 = (file: Express.Multer.File): Promise<string> => {
             resolve(data.Location);
         });
 
+        // TODO: What if bucket doesn't exist?
         /*s3.waitFor("bucketExists", {Bucket: bucketName}, async (existsErr) => {
             if (existsErr) {
 
