@@ -36,13 +36,8 @@ router.put("/", async (req: Request, res: Response) => {
             return;
         }
 
-        // Edit menu with new details
-        await menu.put({
-            id,
-            name,
-            foodEntries,
-            url
-        });
+        // Update menu with new details
+        await MenuModel.update(id, {name, foodEntries, url});
 
         responses.ok("Menu edited", res);
     } catch (err) {

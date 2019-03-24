@@ -86,7 +86,7 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
             });
 
             // Save user and delete verification token from databaes.
-            Promise.all([
+            await Promise.all([
                 newUser.save(),
                 lastAuth.save(),
                 vToken.delete()
