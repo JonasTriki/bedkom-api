@@ -5,9 +5,6 @@ const dev = {
 
     // AWS DynamoDb URL
     awsPrefix: "dev-",
-
-    // Bypassing JWT auth endpoints in dev
-    jtwMasterToken: "TODO",
 };
 
 const prod = {
@@ -27,4 +24,10 @@ export default {
 
     // Generated from: https://www.grc.com/passwords.htm
     jwtSecret: "TODO",
+
+    devMasterToken: "TODO",
+    devMasterJWTPayload: {
+        id: "abc123",
+        role: "super-admin",
+    },
 };

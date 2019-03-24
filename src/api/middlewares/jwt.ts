@@ -23,6 +23,13 @@ const verifyJWTToken = (req: Request, res: Response, next: NextFunction) => {
         return;
     }
     const token = authHeader[1];
+
+    // Check if we bypass JWT verification.
+    if ((process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "local") && token === config.devMasterToken) {
+        req.jwt = config.devMasterJWTPayload as JWTPayload;
+        next();
+        return;
+    }
     jwt.verify(token, config.jwtSecret, (err, decodedToken) => {
         if (err || !decodedToken) {
             responses.unauthorized(res);
