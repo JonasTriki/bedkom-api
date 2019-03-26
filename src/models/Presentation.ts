@@ -13,6 +13,7 @@ export interface Presentation {
     startTime: number;
     endTime: number;
     responsible: string[];
+    contractPath?: string;
     contractUrl?: string;
     menuId?: string;
     description: string;
@@ -60,6 +61,9 @@ const PresentationModel = db.model<Presentation, string>("bedkom-presentations",
     responsible: {
         type: [String],
         required: true,
+    },
+    contractPath: {
+        type: String,
     },
     contractUrl: {
         type: String,
