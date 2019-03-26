@@ -3,7 +3,6 @@ import {body, validationResult} from "express-validator/check";
 import {uploadToS3} from "../../../aws";
 import {isPermitted} from "../../../models/enums/UserRoles";
 import PresentationModel from "../../../models/Presentation";
-import {Presentation} from "../../../models/Presentation";
 import responses from "../../../responses";
 import {getSemesterYear} from "../../../utils/dateTime";
 import {vPresentations} from "../../../validators";
