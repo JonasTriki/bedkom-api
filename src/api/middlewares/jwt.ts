@@ -12,7 +12,7 @@ declare global {
     }
 }
 
-const verifyJWTToken = (req: Request, res: Response, next: NextFunction) => {
+const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
         responses.unauthorized(res);
         return;
@@ -40,4 +40,4 @@ const verifyJWTToken = (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-export default verifyJWTToken;
+export default verifyJWT;

@@ -9,7 +9,7 @@ const unexpectedError = (err: any, res: Response) => {
 };
 
 const forbidden = (data: any, res: Response) => {
-    res.status(403).send({ status: "forbidden", data });
+    res.status(403).send({ message: "forbidden", data });
 };
 
 const unauthorized = (res: Response) => {
@@ -21,21 +21,22 @@ const badRequest = (req: Request, res: Response) => {
     res.status(400).send("Bad request");
 };
 
-const accepted = (data: any, sendStatus: string, res: Response) => {
-    res.status(202).send({ status: sendStatus, data });
+const accepted = (data: any, sendMessage: string, res: Response) => {
+    res.status(202).send({ message: sendMessage, data });
 };
 
-const status = (sendStatus: any, data: any, res: Response) => {
-    res.send({ status: sendStatus, data });
+const message = (sendMessage: any, data: any, res: Response) => {
+    res.send({ message: sendMessage, data });
 };
 
 const ok = (data: any, res: Response) => {
-    status("ok", data, res);
+    message("ok", data, res);
 };
 
-const jwt = (user: UserHashed, res: Response) => {
-    const token = jsonwebtoken.sign({ id: user.id, role: user.role }, config.jwtSecret);
-    ok({ token }, res);
+const jwt = (userHashed: UserHashed, res: Response) => {
+    const token = jsonwebtoken.sign({ id: userHashed.id, role: userHashed.role }, config.jwtSecret);
+    const {hash, ...user} = userHashed;
+    ok({ token, user }, res);
 };
 
 export default {
@@ -44,7 +45,7 @@ export default {
     forbidden,
     badRequest,
     accepted,
-    status,
+    message,
     ok,
     jwt,
 };

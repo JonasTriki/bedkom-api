@@ -50,6 +50,8 @@ router.post("/", async (req, res) => {
             return responses.badRequest(req, res);
         }
 
+        // TODO: Make sure register before the startTime of the presentation
+
         // Create the registration
         const payload: Registration = {
             id: v4(),
