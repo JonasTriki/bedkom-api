@@ -16,7 +16,8 @@ const inputValidator = [
   vUsername,
   vPassword,
   vOrg,
-  body("verificationToken").isUUID(4).optional()
+  body("verificationToken").isUUID(4).optional(),
+  body("email").isEmail().optional(),
 ];
 
 router.post("/", inputValidator, async (req: Request, res: Response) => {
@@ -25,7 +26,7 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
       return responses.badRequest(req, res);
     }
 
-    const {username, password, org, verificationToken} = req.body;
+    const {username, password, org, verificationToken, email} = req.body;
 
     try {
 
@@ -42,17 +43,18 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
         if (lastAuth.year !== curSemYear.year || lastAuth.semester !== curSemYear.semester) {
 
           // User is not verified, re-verify the user.
-          responses.accepted({}, "user-verification-required", res);
+          responses.accepted({}, "user-verification", res);
           return;
         }
 
         // Verify users password
-        if (argon2.verify(user.hash, password)) {
+        if (await argon2.verify(user.hash, password)) {
+          console.log(user.hash, password);
 
           // Responding with session token
           responses.jwt(user, res);
         } else {
-          responses.badRequest(req, res);
+          responses.unauthorized(res);
         }
       } else {
 
@@ -72,10 +74,11 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
             id: username,
             firstName: vToken.firstName,
             lastName: vToken.lastName,
-            email: vToken.email,
+            email: email || vToken.email,
             studyProgram: vToken.studyProgram,
+            startYear: vToken.startYear,
+            startSemester: vToken.startSemester,
             year: vToken.year,
-            semester: vToken.semester,
             role: "student",
             hash: await argon2.hash(password),
           });
@@ -99,35 +102,50 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
         } else {
 
           // Check if the user already has a token pending.
-          const curVerToken = await VerificationTokenModel.get(username);
-          let token;
+          let curVerToken = await VerificationTokenModel.get(username);
           if (curVerToken === undefined) {
-            token = v4();
 
             // First time this student signs in; check that the student is an informatics student.
             const student = await fetchInformaticsStudent(username, password, org);
-            if (!student || student.studies.length === 0) {
-              responses.forbidden({}, res);
-              return;
+            if (student === undefined) {
+
+              // Could not sign into StudentWeb
+              return responses.unauthorized(res);
+            } else if (!student || student.studies.length === 0) {
+              return responses.forbidden({}, res);
             }
 
             // As of now, we just select the first study to be current studyprogram.
             const study = student.studies[0];
 
-            await VerificationTokenModel.create({
+            // Note: we also include the hashed password with the token to verify the user at a later time.
+            curVerToken = await VerificationTokenModel.create({
               id: username,
-              token,
+              hash: await argon2.hash(password),
+              token: v4(),
               firstName: student.details.firstName,
               lastName: student.details.lastName,
               email: student.details.email,
               studyProgram: study.program,
+              startYear: study.startYear,
+              startSemester: study.startSemester,
               year: study.year,
-              semester: study.semester,
             });
           } else {
-            token = curVerToken.token;
+
+            // Make sure the password is correct before returing the token
+            const passwordOk = await argon2.verify(curVerToken.hash, password);
+            if (!passwordOk) {
+              return responses.forbidden({}, res);
+            }
+
+            // Passwords match, return the token from curVerToken
           }
-          responses.accepted({token}, "password-setup", res);
+          responses.accepted({
+            token: curVerToken.token,
+            firstName: curVerToken.firstName,
+            email: curVerToken.email,
+          }, "first-login-setup", res);
         }
       }
     } catch (err) {

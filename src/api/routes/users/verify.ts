@@ -10,44 +10,45 @@ import {vOrg, vPassword, vUsername} from "../../../validators";
 const router = Router();
 
 const inputValidator = [
-    vUsername,
-    vPassword,
-    vOrg,
+  vUsername,
+  vPassword,
+  vOrg,
 ];
 
 router.post("/", inputValidator, async (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return responses.badRequest(req, res);
-    }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return responses.badRequest(req, res);
+  }
 
-    const {username, password, org} = req.body;
+  const {username, password, org} = req.body;
 
-    // Check that user already exists
-    const user = await UserModel.get(username);
-    if (user === undefined) {
-        responses.badRequest(req, res);
-        return;
-    }
+  // Check that user exists
+  const user = await UserModel.get(username);
+  if (user === undefined) {
+    responses.badRequest(req, res);
+    return;
+  }
 
-    // Fetch student details
-    const student = await fetchInformaticsStudent(username, password, org);
-    if (!student || student.studies.length === 0) {
-        responses.badRequest(req, res);
-        return;
-    }
+  // Fetch student details
+  const student = await fetchInformaticsStudent(username, password, org);
+  if (student === undefined) {
+    return responses.unauthorized(res);
+  } else if (!student || student.studies.length === 0) {
+    return responses.forbidden({}, res);
+  }
 
-    // Add last authorized entry
-    const curSemYear = currentSemesterYear();
-    const lastAuth = new LastAuthorized({
-        id: username,
-        year: curSemYear.year,
-        semester: curSemYear.semester
-    });
-    await lastAuth.save();
+  // Add last authorized entry
+  const curSemYear = currentSemesterYear();
+  const lastAuth = new LastAuthorized({
+    id: username,
+    year: curSemYear.year,
+    semester: curSemYear.semester
+  });
+  await lastAuth.save();
 
-    // Responding with JWT session token
-    responses.jwt(user, res);
+  // Responding with session token
+  responses.jwt(user, res);
 });
 
 export default router;

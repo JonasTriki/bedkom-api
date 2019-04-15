@@ -10,8 +10,9 @@ export interface User {
   lastName: string;
   email: string;
   studyProgram: string;
+  startYear: number;
+  startSemester: string;
   year: number;
-  semester: string;
 }
 
 export interface UserHashed extends User {
@@ -42,14 +43,18 @@ const UserModel = db.model<UserHashed, string>("bedkom-users", new Schema({
     required: true,
     enum: StudyPrograms
   },
-  year: {
+  startYear: {
     type: Number,
     required: true
   },
-  semester: {
+  startSemester: {
     type: String,
     required: true,
     enum: Semesters
+  },
+  year: {
+    type: Number,
+    required: true
   },
   role: {
     type: String,

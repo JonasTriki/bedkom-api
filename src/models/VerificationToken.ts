@@ -6,6 +6,7 @@ import {User} from "./User";
 
 interface VerificationToken extends User {
   token: string;
+  hash: string;
 }
 
 const VerificationTokenModel = db.model<VerificationToken, string>("bedkom-verification-tokens",
@@ -14,6 +15,10 @@ const VerificationTokenModel = db.model<VerificationToken, string>("bedkom-verif
       type: String,
       required: true,
       hashKey: true,
+    },
+    hash: {
+      type: String,
+      required: true,
     },
     token: {
       type: String,
@@ -36,15 +41,19 @@ const VerificationTokenModel = db.model<VerificationToken, string>("bedkom-verif
       required: true,
       enum: StudyPrograms
     },
-    year: {
+    startYear: {
       type: Number,
       required: true
     },
-    semester: {
+    startSemester: {
       type: String,
       required: true,
       enum: Semesters
     },
+    year: {
+      type: Number,
+      required: true
+    }
   }, {expires: 24 * 60 * 60})); /* Tokens expire after 1 day */
 
 export default VerificationTokenModel;
