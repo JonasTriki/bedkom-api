@@ -36,6 +36,10 @@ const VerificationTokenModel = db.model<VerificationToken, string>("bedkom-verif
       type: String,
       required: true
     },
+    org: {
+      type: String,
+      required: true
+    },
     studyProgram: {
       type: String,
       required: true,

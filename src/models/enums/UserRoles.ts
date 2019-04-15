@@ -10,13 +10,13 @@ const roles = [
 
 export const isPermitted = (req: Request, minRole: string): boolean => {
 
-    // Check if the request has a JWT payload.
-    if (!req.jwt) {
+    // Check if the request has a session attached to it.
+    if (!req.session.role) {
         return false;
     }
 
-    // Request contains JWT payload, use it to compare to other.
-    const role = req.jwt.role;
+    // Request contains session, use it to compare to other.
+    const role = req.session.role;
     if (role === minRole) {
         return true;
     }

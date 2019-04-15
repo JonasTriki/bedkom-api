@@ -7,8 +7,8 @@ import config from "./config";
 const bucketName = config.awsPrefix + "bedkom-resources";
 const s3 = new S3({
     credentials: {
-        accessKeyId: config.awsAccessKeyId,
-        secretAccessKey: config.awsSecretAccessKey
+        accessKeyId: config.awsConfig.accessKeyId,
+        secretAccessKey: config.awsConfig.secretAccessKey,
     },
 });
 

@@ -1,9 +1,9 @@
 import { Router } from "express";
-import verifyJWT from "../../middlewares/jwt";
+import verifySession from "../../middlewares/session";
 import add from "./add";
 const router = Router();
 
-router.use(verifyJWT);
+router.use(verifySession);
 router.use("/add", add);
 
 export default router;

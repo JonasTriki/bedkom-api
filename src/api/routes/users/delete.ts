@@ -17,8 +17,8 @@ router.delete("/", inputValidator, async (req: Request, res: Response, next: Nex
         return responses.badRequest(req, res);
     }
 
-    // TODO: Do we need to compare the JWT id and body username?
-    if (req.jwt.id !== req.body.username) {
+    // TODO: Do we need to compare the session uid and body username?
+    if (req.session.uid !== req.body.username) {
         return responses.badRequest(req, res);
     }
     next();

@@ -1,10 +1,10 @@
 import { Router } from "express";
-import verifyJWT from "../../middlewares/jwt";
+import verifySession from "../../middlewares/session";
 import deregister from "./deregister";
 import register from "./register";
 const router = Router();
 
-router.use(verifyJWT);
+router.use(verifySession);
 router.use("/register", register);
 router.use("/deregister", deregister);
 

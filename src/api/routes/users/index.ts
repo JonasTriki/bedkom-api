@@ -1,14 +1,16 @@
 import { Router } from "express";
-import verifyJWT from "../../middlewares/jwt";
+import verifySession from "../../middlewares/session";
 import _delete from "./delete";
 import login from "./login";
+import setup from "./setup";
 import verify from "./verify";
 const router = Router();
 
 router.use("/login", login);
+router.use("/setup", setup);
 router.use("/verify", verify);
 
-router.use(verifyJWT);
+router.use(verifySession);
 router.use("/delete", _delete);
 
 export default router;

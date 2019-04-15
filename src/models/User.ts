@@ -9,6 +9,7 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
+  org: string;
   studyProgram: string;
   startYear: number;
   startSemester: string;
@@ -35,6 +36,10 @@ const UserModel = db.model<UserHashed, string>("bedkom-users", new Schema({
     required: true
   },
   email: {
+    type: String,
+    required: true
+  },
+  org: {
     type: String,
     required: true
   },

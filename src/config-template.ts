@@ -3,31 +3,34 @@
 
 const dev = {
 
-    // AWS DynamoDb URL
-    awsPrefix: "dev-",
+  // AWS DynamoDb URL
+  awsPrefix: "dev-",
 };
 
 const prod = {
 
-    // AWS DynamoDb URL
-    awsPrefix: "prod-",
+  // AWS DynamoDb URL
+  awsPrefix: "prod-",
 };
 
 const config = process.env.NODE_ENV === "prod" ? prod : dev;
 
 export default {
-    ...config,
+  ...config,
 
-    awsAccessKeyId: "TODO",
-    awsRegion: "TODO",
-    awsSecretAccessKey: "TODO",
+  awsConfig: {
+    accessKeyId: "TODO",
+    secretAccessKey: "TODO",
+    region: "TODO",
+  },
 
-    // Generated from: https://www.grc.com/passwords.htm
-    jwtSecret: "TODO",
+  // Generated from: https://www.grc.com/passwords.htm
+  sessionSecret: "TODO",
 
-    devMasterToken: "TODO",
-    devMasterJWTPayload: {
-        id: "abc123",
-        role: "super-admin",
-    },
+  // Bypassing sessionized auth endpoints in dev
+  devMasterToken: "TODO",
+  devMasterSession: {
+    uid: "abc123",
+    role: "super-admin",
+  },
 };

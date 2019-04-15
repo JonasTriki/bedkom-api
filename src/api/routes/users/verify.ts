@@ -5,14 +5,13 @@ import UserModel from "../../../models/user";
 import responses from "../../../responses";
 import {currentSemesterYear} from "../../../utils/dateTime";
 import {fetchInformaticsStudent} from "../../../utils/fsLogin";
-import {vOrg, vPassword, vUsername} from "../../../validators";
+import {vPassword, vUsername} from "../../../validators";
 
 const router = Router();
 
 const inputValidator = [
   vUsername,
   vPassword,
-  vOrg,
 ];
 
 router.post("/", inputValidator, async (req: Request, res: Response) => {
@@ -21,7 +20,7 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
     return responses.badRequest(req, res);
   }
 
-  const {username, password, org} = req.body;
+  const {username, password} = req.body;
 
   // Check that user exists
   const user = await UserModel.get(username);
@@ -31,7 +30,7 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
   }
 
   // Fetch student details
-  const student = await fetchInformaticsStudent(username, password, org);
+  const student = await fetchInformaticsStudent(username, password, user.org);
   if (student === undefined) {
     return responses.unauthorized(res);
   } else if (!student || student.studies.length === 0) {
@@ -48,7 +47,7 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
   await lastAuth.save();
 
   // Responding with session token
-  responses.jwt(user, res);
+  responses.session(req, res, user);
 });
 
 export default router;

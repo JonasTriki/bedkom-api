@@ -2,11 +2,7 @@ import dynamoose from "dynamoose";
 import config from "./config";
 import logger from "./logger";
 
-dynamoose.AWS.config.update({
-    accessKeyId: config.awsAccessKeyId,
-    secretAccessKey: config.awsSecretAccessKey,
-    region: config.awsRegion
-});
+dynamoose.AWS.config.update(config.awsConfig);
 
 dynamoose.setDefaults({
     create: true,
