@@ -37,7 +37,7 @@ const session = (req: Request, res: Response, userHashed: UserHashed) => {
   const {hash, ...user} = userHashed;
   req.session.uid = user.id;
   req.session.role = user.role;
-  ok({user}, res);
+  ok({user, csrfToken: req.csrfToken()}, res);
 };
 
 /*const jwt = (userHashed: UserHashed, res: Response) => {

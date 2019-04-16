@@ -6,6 +6,7 @@ import serverless from "serverless-http";
 // NOTE: Connect DynamoDb does not have Type definitions.
 // @ts-ignore
 import connectDynamoDb from "connect-dynamodb";
+import cookieParser from "cookie-parser";
 import session from "express-session";
 import {v4} from "uuid";
 import api from "./api";
@@ -37,6 +38,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(session(sessionOpts));
+app.use(cookieParser(config.sessionSecret)); // TODO: Invesigate if the cookie-parse secret must equal session secret.
 
 // Setup routes
 app.use(api);

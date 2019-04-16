@@ -1,4 +1,5 @@
 import argon2 from "argon2";
+import csrf from "csurf";
 import {Request, Response, Router} from "express";
 import {validationResult} from "express-validator/check";
 import {v4} from "uuid";
@@ -9,6 +10,7 @@ import responses from "../../../responses";
 import {currentSemesterYear} from "../../../utils/dateTime";
 import {fetchInformaticsStudent} from "../../../utils/fsLogin";
 import {vOrg, vPassword, vUsername} from "../../../validators";
+import {csrfTokenPost} from "../../middlewares/csrftoken";
 
 const router = Router();
 
@@ -18,7 +20,7 @@ const inputValidator = [
   vOrg,
 ];
 
-router.post("/", inputValidator, async (req: Request, res: Response) => {
+router.post("/", csrfTokenPost, inputValidator, async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return responses.badRequest(req, res);
