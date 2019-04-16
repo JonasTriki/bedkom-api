@@ -20,6 +20,7 @@ const storeOpts = {
   AWSConfigJSON: config.awsConfig
 };
 const sessionOpts: session.SessionOptions = {
+  name: "sid",
   secret: config.sessionSecret,
   genid: () => v4(),
   store: new DynamoDBStore(storeOpts),

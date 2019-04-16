@@ -1,6 +1,7 @@
 import { Router } from "express";
 import verifySession from "../../middlewares/session";
 import _delete from "./delete";
+import get from "./get";
 import login from "./login";
 import setup from "./setup";
 import verify from "./verify";
@@ -11,6 +12,7 @@ router.use("/setup", setup);
 router.use("/verify", verify);
 
 router.use(verifySession);
+router.use("/get", get);
 router.use("/delete", _delete);
 
 export default router;
