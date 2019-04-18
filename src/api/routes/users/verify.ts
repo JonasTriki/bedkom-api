@@ -6,7 +6,6 @@ import responses from "../../../responses";
 import {currentSemesterYear} from "../../../utils/dateTime";
 import {fetchInformaticsStudent} from "../../../utils/fsLogin";
 import {vPassword, vUsername} from "../../../validators";
-import {csrfTokenPost} from "../../middlewares/csrftoken";
 
 const router = Router();
 
@@ -15,7 +14,7 @@ const inputValidator = [
   vPassword,
 ];
 
-router.post("/", csrfTokenPost, inputValidator, async (req: Request, res: Response) => {
+router.post("/", inputValidator, async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return responses.badRequest(req, res);

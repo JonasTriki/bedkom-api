@@ -7,7 +7,6 @@ import VerificationTokenModel from "../../../models/VerificationToken";
 import responses from "../../../responses";
 import {currentSemesterYear} from "../../../utils/dateTime";
 import {vPassword, vUsername} from "../../../validators";
-import {csrfTokenPost} from "../../middlewares/csrftoken";
 
 const router = Router();
 
@@ -18,7 +17,7 @@ const inputValidator = [
   body("email").isEmail(),
 ];
 
-router.post("/", csrfTokenPost, inputValidator, async (req: Request, res: Response) => {
+router.post("/", inputValidator, async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return responses.badRequest(req, res);

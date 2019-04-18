@@ -3,7 +3,7 @@ import jsonschema from "jsonschema";
 import FoodEntries from "./jsonschemas/FoodEntries";
 import Semesters from "./models/enums/Semesters";
 
-const vUsername = body("username").isString().custom((value) => value.length === 6);
+const vUsername = body("username").trim().isString().custom((value) => value.length === 6);
 const vPassword = body("password").isString().isLength({min: 1});
 const vOrg = body("org").isIn(["uib", "hvl"]);
 

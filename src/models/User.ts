@@ -3,6 +3,7 @@ import db from "../db";
 import Semesters from "./enums/Semesters";
 import StudyPrograms from "./enums/StudyPrograms";
 import UserRoles from "./enums/UserRoles";
+import CommitteePosition from "./types/CommitteePosition";
 
 export interface User {
   id: string;
@@ -19,6 +20,8 @@ export interface User {
 export interface UserHashed extends User {
   role: string;
   hash: string;
+  imgUrl?: string;
+  committeePosition?: CommitteePosition;
 }
 
 const UserModel = db.model<UserHashed, string>("bedkom-users", new Schema({
@@ -69,7 +72,13 @@ const UserModel = db.model<UserHashed, string>("bedkom-users", new Schema({
   hash: {
     type: String,
     required: true
-  }
+  },
+  imgUrl: {
+    type: String
+  },
+  committeePosition: {
+    type: String
+  },
 }));
 
 export default UserModel;

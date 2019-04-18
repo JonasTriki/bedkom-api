@@ -1,6 +1,4 @@
 import {Request, Response} from "express";
-import jsonwebtoken from "jsonwebtoken";
-import config from "./config";
 import {UserHashed} from "./models/User";
 
 const unexpectedError = (err: any, res: Response) => {
@@ -33,21 +31,23 @@ const ok = (data: any, res: Response) => {
   message("ok", data, res);
 };
 
-const session = (req: Request, res: Response, userHashed: UserHashed) => {
+const csrfToken = (req: Request, res: Response, token: string, userHashed?: UserHashed) => {
+  if (userHashed) {
+    const {hash, ...user} = userHashed;
+    req.session.uid = user.id;
+    req.session.role = user.role;
+    ok({user, csrfToken: token}, res);
+  } else {
+    ok({csrfToken: token}, res);
+  }
+};
+
+const session = (req: Request, res: Response, userHashed?: UserHashed) => {
   const {hash, ...user} = userHashed;
   req.session.uid = user.id;
   req.session.role = user.role;
-  ok({user, csrfToken: req.csrfToken()}, res);
+  ok({user}, res);
 };
-
-/*const jwt = (userHashed: UserHashed, res: Response) => {
-  const token = jsonwebtoken.sign({id: userHashed.id, role: userHashed.role}, config.jwtSecret);
-  const {hash, ...user} = userHashed;
-
-  // Set HTTP Only cookie
-  res.cookie();
-  ok({token, user}, res);
-};*/
 
 export default {
   unexpectedError,
@@ -57,5 +57,6 @@ export default {
   accepted,
   message,
   ok,
+  csrfToken,
   session,
 };

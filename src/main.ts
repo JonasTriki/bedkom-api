@@ -1,4 +1,5 @@
 import cors from "cors";
+import csrf from "csurf";
 import express from "express";
 import morgan from "morgan";
 import serverless from "serverless-http";
@@ -28,6 +29,7 @@ const sessionOpts: session.SessionOptions = {
   resave: false,
   saveUninitialized: false,
 };
+const csrfProtection = csrf({cookie: true});
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -39,6 +41,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(session(sessionOpts));
 app.use(cookieParser(config.sessionSecret)); // TODO: Invesigate if the cookie-parse secret must equal session secret.
+app.use(csrfProtection);
 
 // Setup routes
 app.use(api);
