@@ -1,4 +1,5 @@
 import { Router } from "express";
+import about from "./routes/about";
 import companies from "./routes/companies";
 import dots from "./routes/dots";
 import menus from "./routes/menus";
@@ -18,5 +19,6 @@ router.use("/menus", menus);
 router.use("/presentations", presentations);
 router.use("/registrations", registrations);
 router.use("/waitlists", waitlists);
+router.use("/about", about);
 
 export default router;
