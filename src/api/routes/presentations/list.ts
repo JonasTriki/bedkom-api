@@ -11,7 +11,7 @@ router.get("/", async (req: Request, res: Response) => {
         const presentations = await PresentationModel.scan().exec();
 
         // Return with all presentations
-        responses.ok({presentations}, res);
+        responses.ok(presentations, res);
     } catch (err) {
         responses.unexpectedError(req, res);
     }

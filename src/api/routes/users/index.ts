@@ -4,6 +4,7 @@ import bedkom from "./bedkom";
 import changePassword from "./changePassword";
 import _delete from "./delete";
 import edit from "./edit";
+import list from "./list";
 import login from "./login";
 import logout from "./logout";
 import resetPassword from "./resetPassword";
@@ -23,5 +24,6 @@ router.use("/change-password", changePassword);
 router.use("/reset-password", resetPassword);
 router.use("/logout", logout);
 router.use("/delete", _delete);
+router.use("/list", list);
 
 export default router;
