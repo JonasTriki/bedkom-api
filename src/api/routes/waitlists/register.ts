@@ -14,7 +14,7 @@ const inputValidator = [
     body("presentationId").isUUID(4),
 ];
 
-router.delete("/", inputValidator, (req: Request, res: Response, next: NextFunction) => {
+router.post("/", inputValidator, (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return responses.badRequest(req, res);

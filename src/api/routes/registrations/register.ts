@@ -11,16 +11,13 @@ import responses from "../../../responses";
 const router = Router();
 
 const inputValidator = [
-    body("userId").isUUID(4),
+    body("userId").isUUID(4).optional(),
     body("presentationId").isUUID(4),
 ];
 
-router.delete("/", inputValidator, (req: Request, res: Response, next: NextFunction) => {
+router.post("/", inputValidator, (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return responses.badRequest(req, res);
-    }
-    if (!isPermitted(req, "bedkom")) {
         return responses.badRequest(req, res);
     }
     next();
@@ -33,8 +30,16 @@ router.post("/", async (req, res) => {
             presentationId
         } = req.body;
 
+        // Bedkom-members should be able to register students
+        let uid;
+        if (userId && isPermitted(req, "bedkom")) {
+          uid = userId;
+        } else {
+          uid = req.session.uid;
+        }
+
         // Check that user already exists
-        const user = await UserModel.get(userId);
+        const user = await UserModel.get(uid);
         if (user === undefined) {
             return responses.badRequest(req, res);
         }

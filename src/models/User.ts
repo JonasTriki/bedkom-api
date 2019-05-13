@@ -22,6 +22,7 @@ export interface UserHashed extends User {
   hash: string;
   imgUrl?: string;
   committeePosition?: CommitteePosition;
+  allergies?: string;
 }
 
 const UserModel = db.model<UserHashed, string>("bedkom-users", new Schema({
@@ -41,6 +42,9 @@ const UserModel = db.model<UserHashed, string>("bedkom-users", new Schema({
   email: {
     type: String,
     required: true
+  },
+  allergies: {
+    type: String,
   },
   org: {
     type: String,

@@ -1,4 +1,5 @@
 import {Request, Response, Router} from "express";
+import RegistrationModel from "../../../models/Registration";
 import UserModel from "../../../models/user";
 import responses from "../../../responses";
 
@@ -21,8 +22,12 @@ router.get("/", async (req: Request, res: Response) => {
       return responses.csrfToken(req, res, token);
     }
 
+    // Fetch all registrations
+    const registrations = await RegistrationModel.scan({userId: {eq: username}}).exec();
+    const presentations = registrations.map((reg) => reg.presentationId);
+
     // Responding with CSRF-token and user info
-    responses.csrfToken(req, res, token, hashedUser);
+    responses.csrfToken(req, res, token, hashedUser, presentations);
   } catch (err) {
     responses.unexpectedError(err, res);
   }

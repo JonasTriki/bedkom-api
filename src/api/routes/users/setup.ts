@@ -15,6 +15,7 @@ const inputValidator = [
   vPassword,
   body("verificationToken").isUUID(4),
   body("email").isEmail(),
+  body("allergies").isString().optional()
 ];
 
 router.post("/", inputValidator, async (req: Request, res: Response) => {
@@ -23,7 +24,7 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
       return responses.badRequest(req, res);
     }
 
-    const {username, password, verificationToken, email} = req.body;
+    const {username, password, verificationToken, email, allergies} = req.body;
 
     try {
 
@@ -49,6 +50,7 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
         firstName: vToken.firstName,
         lastName: vToken.lastName,
         email,
+        allergies,
         org: vToken.org,
         studyProgram: vToken.studyProgram,
         startYear: vToken.startYear,

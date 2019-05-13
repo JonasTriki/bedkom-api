@@ -1,8 +1,9 @@
-import { Router } from "express";
+import {Router} from "express";
 import about from "./routes/about";
 import companies from "./routes/companies";
 import dots from "./routes/dots";
 import menus from "./routes/menus";
+import news from "./routes/news";
 import presentations from "./routes/presentations";
 import registrations from "./routes/registrations";
 import sessions from "./routes/sessions";
@@ -20,5 +21,6 @@ router.use("/presentations", presentations);
 router.use("/registrations", registrations);
 router.use("/waitlists", waitlists);
 router.use("/about", about);
+router.use("/news", news);
 
 export default router;

@@ -12,6 +12,7 @@ const inputValidator = [
   body("firstName").isLength({min: 2}),
   body("lastName").isLength({min: 2}),
   body("email").isEmail(),
+  body("allergies").isString().optional()
 
   // TODO: Add more admin-only fields
 ];
@@ -26,7 +27,7 @@ router.put("/"/*, csrfProtection*/, inputValidator, (req: Request, res: Response
 
 router.put("/", async (req: Request, res: Response) => {
   try {
-    const {id, firstName, lastName, email} = req.body;
+    const {id, firstName, lastName, email, allergies} = req.body;
 
     // Check if we use id or session uid.
     let uid;
@@ -44,7 +45,7 @@ router.put("/", async (req: Request, res: Response) => {
     }
 
     // Update user with new details
-    const userHashed = await UserModel.update(uid, {firstName, lastName, email});
+    const userHashed = await UserModel.update(uid, {firstName, lastName, email, allergies});
     const {hash, ...user} = userHashed;
 
     responses.ok({user}, res);

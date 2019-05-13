@@ -31,12 +31,12 @@ const ok = (data: any, res: Response) => {
   message("ok", data, res);
 };
 
-const csrfToken = (req: Request, res: Response, token: string, userHashed?: UserHashed) => {
+const csrfToken = (req: Request, res: Response, token: string, userHashed?: UserHashed, presentations?: string[]) => {
   if (userHashed) {
     const {hash, ...user} = userHashed;
     req.session.uid = user.id;
     req.session.role = user.role;
-    ok({user, csrfToken: token}, res);
+    ok({user: {...user, presentations}, csrfToken: token}, res);
   } else {
     ok({csrfToken: token}, res);
   }

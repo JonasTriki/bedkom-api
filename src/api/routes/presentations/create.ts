@@ -17,7 +17,7 @@ const router = Router();
 
 router.post("/", (req: Request, res: Response, next: NextFunction) => {
 
-    // Capture banner-image using multer
+    // Capture contract using multer
     upload.single("contract")(req, res, (err) => {
         if (err) {
             responses.unexpectedError(err, res);
