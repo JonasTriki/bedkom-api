@@ -8,7 +8,7 @@ npm install
 ```
 
 ## Konfigurasjon
-Før man kjører systemet er man nødt til å lage en kopi av filen ```config-template.ts``` og kalle den nye filen for ```config.ts```. Bytt ut alle *TODO* felter med faktisk konfigurasjon. For mer informasjon, vennligst se kommentarene over hver *TODO*-seksjon.
+Før man kjører systemet er man nødt til å lage en kopi av filen ```config-template.ts``` i mappen ```src``` og kalle den nye filen for ```config.ts```. Bytt ut alle *TODO* felter med faktisk konfigurasjon. For mer informasjon, vennligst se kommentarene over hver *TODO*-seksjon.
 
 ## Bruk
 Kjør følgende
