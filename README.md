@@ -1,6 +1,6 @@
 # API for Bedkom
 Dette er ett system for administrering av bedriftspresentasjon ved Institutt for informatikk, UiB. 
-Dette er API-et for [Bedkom-systemet](https://github.com/JonasTriki/bedkom), og er utviklet av Jonas Triki i forbindelse med ett studentprosjekt (INF219) våren 2019.
+Dette er API-et for [Bedkom-systemet](https://github.com/JonasTriki/bedkom), og er utviklet av Jonas Triki i forbindelse med ett studentprosjekt ([INF219](https://www.uib.no/emne/INF219)) våren 2019.
 
 ## Installasjon
 ```
