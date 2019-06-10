@@ -1,5 +1,5 @@
-import {NextFunction, Request, Response, Router} from "express";
-import {isPermitted} from "../../../models/enums/UserRoles";
+import { NextFunction, Request, Response, Router } from "express";
+import { isPermitted } from "../../../models/enums/UserRoles";
 import UserModel from "../../../models/User";
 import responses from "../../../responses";
 
@@ -13,17 +13,16 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get("/", async (req: Request, res: Response) => {
-    try {
+  try {
+    // List out the users
+    const hashedUsers = await UserModel.scan().exec();
+    const users = hashedUsers.map(({ hash, ...user }) => user);
 
-        // List out the users
-        const hashedUsers = await UserModel.scan().exec();
-        const users = hashedUsers.map(({hash, ...user}) => user);
-
-        // Return with all users
-        responses.ok(users, res);
-    } catch (err) {
-        responses.unexpectedError(req, res);
-    }
+    // Return with all users
+    responses.ok(users, res);
+  } catch (err) {
+    responses.unexpectedError(req, res);
+  }
 });
 
 export default router;

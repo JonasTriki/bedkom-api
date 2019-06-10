@@ -1,14 +1,12 @@
-import {Request, Response, Router} from "express";
-import {validationResult} from "express-validator/check";
+import { Request, Response, Router } from "express";
+import { validationResult } from "express-validator/check";
 import UserModel from "../../../models/user";
 import responses from "../../../responses";
-import {vUsername} from "../../../validators";
+import { vUsername } from "../../../validators";
 
 const router = Router();
 
-const inputValidator = [
-  vUsername.optional(),
-];
+const inputValidator = [vUsername.optional()];
 
 router.post("/", inputValidator, async (req: Request, res: Response) => {
   const errors = validationResult(req);
@@ -17,7 +15,7 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
   }
 
   try {
-    const {username} = req.body;
+    const { username } = req.body;
 
     let uid;
     if (username) {

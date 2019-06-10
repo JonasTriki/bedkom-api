@@ -1,4 +1,3 @@
-
 // Here we define what study years the programs may have (bachelors degree, masters degree etc.).
 type Degree = "bachelor" | "3rd-year-only" | "master";
 

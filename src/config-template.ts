@@ -2,15 +2,13 @@
 // with respected values.
 
 const dev = {
-
   // AWS DynamoDb URL
-  awsPrefix: "dev-",
+  awsPrefix: "dev-"
 };
 
 const prod = {
-
   // AWS DynamoDb URL
-  awsPrefix: "prod-",
+  awsPrefix: "prod-"
 };
 
 const config = process.env.NODE_ENV === "prod" ? prod : dev;
@@ -21,7 +19,7 @@ export default {
   awsConfig: {
     accessKeyId: "TODO",
     secretAccessKey: "TODO",
-    region: "TODO",
+    region: "TODO"
   },
 
   // Generated from: https://www.grc.com/passwords.htm
@@ -31,6 +29,6 @@ export default {
   devMasterToken: "TODO",
   devMasterSession: {
     uid: "abc123",
-    role: "super-admin",
-  },
+    role: "super-admin"
+  }
 };

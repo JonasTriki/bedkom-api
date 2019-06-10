@@ -1,4 +1,4 @@
-import {Router} from "express";
+import { Router } from "express";
 import about from "./routes/about";
 import companies from "./routes/companies";
 import dots from "./routes/dots";

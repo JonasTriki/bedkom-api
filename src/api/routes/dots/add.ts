@@ -1,32 +1,34 @@
-import {NextFunction, Request, Response, Router} from "express";
-import {validationResult} from "express-validator/check";
-import {v4} from "uuid";
+import { NextFunction, Request, Response, Router } from "express";
+import { validationResult } from "express-validator/check";
+import { v4 } from "uuid";
 import DotModel from "../../../models/Dot";
-import {isPermitted} from "../../../models/enums/UserRoles";
+import { isPermitted } from "../../../models/enums/UserRoles";
 import UserModel from "../../../models/user";
 import responses from "../../../responses";
-import {currentSemesterYear} from "../../../utils/dateTime";
-import {vUsername} from "../../../validators";
+import { currentSemesterYear } from "../../../utils/dateTime";
+import { vUsername } from "../../../validators";
 
 const router = Router();
 
-const inputValidator = [
-  vUsername,
-];
+const inputValidator = [vUsername];
 
-router.post("/", inputValidator, async (req: Request, res: Response, next: NextFunction) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return responses.badRequest(req, res);
+router.post(
+  "/",
+  inputValidator,
+  async (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return responses.badRequest(req, res);
+    }
+    if (!isPermitted(req, "bedkom")) {
+      return responses.badRequest(req, res);
+    }
+    next();
   }
-  if (!isPermitted(req, "bedkom")) {
-    return responses.badRequest(req, res);
-  }
-  next();
-});
+);
 
 router.post("/", inputValidator, async (req: Request, res: Response) => {
-  const {username, comment} = req.body;
+  const { username, comment } = req.body;
 
   // Check that user already exists
   const user = await UserModel.get(username);

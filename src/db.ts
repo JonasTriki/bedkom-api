@@ -5,9 +5,9 @@ import logger from "./logger";
 dynamoose.AWS.config.update(config.awsConfig);
 
 dynamoose.setDefaults({
-    create: true,
-    update: true,
-    prefix: config.awsPrefix
+  create: true,
+  update: true,
+  prefix: config.awsPrefix
 });
 
 logger.info("DynamoDB connected!");

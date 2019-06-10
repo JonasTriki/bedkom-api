@@ -1,6 +1,6 @@
-import {NextFunction, Request, Response, Router} from "express";
-import {body, validationResult} from "express-validator/check";
-import {isPermitted} from "../../../models/enums/UserRoles";
+import { NextFunction, Request, Response, Router } from "express";
+import { body, validationResult } from "express-validator/check";
+import { isPermitted } from "../../../models/enums/UserRoles";
 import UserModel from "../../../models/User";
 import responses from "../../../responses";
 // import {csrfProtection} from "../../middlewares/csrftoken";
@@ -8,26 +8,34 @@ import responses from "../../../responses";
 const router = Router();
 
 const inputValidator = [
-  body("id").isUUID(4).optional(),
-  body("firstName").isLength({min: 2}),
-  body("lastName").isLength({min: 2}),
+  body("id")
+    .isUUID(4)
+    .optional(),
+  body("firstName").isLength({ min: 2 }),
+  body("lastName").isLength({ min: 2 }),
   body("email").isEmail(),
-  body("allergies").isString().optional()
+  body("allergies")
+    .isString()
+    .optional()
 
   // TODO: Add more admin-only fields
 ];
 
-router.put("/"/*, csrfProtection*/, inputValidator, (req: Request, res: Response, next: NextFunction) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return responses.badRequest(req, res);
+router.put(
+  "/" /*, csrfProtection*/,
+  inputValidator,
+  (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return responses.badRequest(req, res);
+    }
+    next();
   }
-  next();
-});
+);
 
 router.put("/", async (req: Request, res: Response) => {
   try {
-    const {id, firstName, lastName, email, allergies} = req.body;
+    const { id, firstName, lastName, email, allergies } = req.body;
 
     // Check if we use id or session uid.
     let uid;
@@ -45,10 +53,15 @@ router.put("/", async (req: Request, res: Response) => {
     }
 
     // Update user with new details
-    const userHashed = await UserModel.update(uid, {firstName, lastName, email, allergies});
-    const {hash, ...user} = userHashed;
+    const userHashed = await UserModel.update(uid, {
+      firstName,
+      lastName,
+      email,
+      allergies
+    });
+    const { hash, ...user } = userHashed;
 
-    responses.ok({user}, res);
+    responses.ok({ user }, res);
   } catch (err) {
     responses.unexpectedError(err, res);
   }

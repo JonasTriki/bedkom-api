@@ -1,4 +1,4 @@
-import {NextFunction, Request, Response} from "express";
+import { NextFunction, Request, Response } from "express";
 import config from "../../config";
 import responses from "../../responses";
 
@@ -12,9 +12,11 @@ declare global {
 }
 
 const verifySession = (req: Request, res: Response, next: NextFunction) => {
-
   // Check if we bypass session in development.
-  if ((process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "local") && req.headers.authorization) {
+  if (
+    (process.env.NODE_ENV === "dev" || process.env.NODE_ENV === "local") &&
+    req.headers.authorization
+  ) {
     const authHeader = req.headers.authorization.split(" ");
     if (authHeader.length === 2) {
       const token = authHeader[1];

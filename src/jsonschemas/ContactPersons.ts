@@ -4,20 +4,20 @@ export default {
     type: "object",
     properties: {
       name: {
-        type: "string",
+        type: "string"
       },
       position: {
-        type: "string",
+        type: "string"
       },
       email: {
         type: "string",
-        format: "email",
+        format: "email"
       },
       phone: {
         type: "string",
-        format: "phone",
-      },
+        format: "phone"
+      }
     },
-    required: ["name", "position", "email", "phone"],
-  },
+    required: ["name", "position", "email", "phone"]
+  }
 };

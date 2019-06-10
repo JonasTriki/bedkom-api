@@ -1,4 +1,4 @@
-import {Router} from "express";
+import { Router } from "express";
 import get from "./get";
 
 const router = Router();

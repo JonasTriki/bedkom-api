@@ -1,8 +1,8 @@
-import {Request, Response, Router} from "express";
+import { Request, Response, Router } from "express";
 import CompanyModel from "../../../models/Company";
-import {isPermitted} from "../../../models/enums/UserRoles";
+import { isPermitted } from "../../../models/enums/UserRoles";
 import MenuModel from "../../../models/Menu";
-import PresentationModel, {Presentation} from "../../../models/Presentation";
+import PresentationModel, { Presentation } from "../../../models/Presentation";
 import responses from "../../../responses";
 
 const router = Router();
@@ -17,23 +17,26 @@ router.get("/", async (req: Request, res: Response) => {
     const presentations: Presentation[] = await PresentationModel.scan().exec();
 
     // Map companies to presentations
-    const mapped = presentations.map((presentation) => {
-
+    const mapped = presentations.map(presentation => {
       // Find company and menu attached to presentation
-      const company = companies.find((c) => c.id === presentation.companyId);
-      const menu = menus.find((m) => m.id === presentation.menuId);
+      const company = companies.find(c => c.id === presentation.companyId);
+      const menu = menus.find(m => m.id === presentation.menuId);
 
       return {
         ...presentation,
-        company: company ? {
-          name: company.name,
-          bannerImgUrl: company.bannerImgUrl,
-          website: company.website,
-        } : null,
-        menu: menu ? {
-          url: menu.url,
-          foodEntries: menu.foodEntries,
-        } : null,
+        company: company
+          ? {
+              name: company.name,
+              bannerImgUrl: company.bannerImgUrl,
+              website: company.website
+            }
+          : null,
+        menu: menu
+          ? {
+              url: menu.url,
+              foodEntries: menu.foodEntries
+            }
+          : null
       };
 
       // Bedkom members get access to all information.

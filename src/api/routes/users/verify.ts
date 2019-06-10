@@ -1,18 +1,15 @@
-import {Request, Response, Router} from "express";
-import {validationResult} from "express-validator/check";
+import { Request, Response, Router } from "express";
+import { validationResult } from "express-validator/check";
 import LastAuthorized from "../../../models/LastAuthorized";
 import UserModel from "../../../models/user";
 import responses from "../../../responses";
-import {currentSemesterYear} from "../../../utils/dateTime";
-import {fetchInformaticsStudent} from "../../../utils/fsLogin";
-import {vPassword, vUsername} from "../../../validators";
+import { currentSemesterYear } from "../../../utils/dateTime";
+import { fetchInformaticsStudent } from "../../../utils/fsLogin";
+import { vPassword, vUsername } from "../../../validators";
 
 const router = Router();
 
-const inputValidator = [
-  vUsername,
-  vPassword,
-];
+const inputValidator = [vUsername, vPassword];
 
 router.post("/", inputValidator, async (req: Request, res: Response) => {
   const errors = validationResult(req);
@@ -20,7 +17,7 @@ router.post("/", inputValidator, async (req: Request, res: Response) => {
     return responses.badRequest(req, res);
   }
 
-  const {username, password} = req.body;
+  const { username, password } = req.body;
 
   // Check that user exists
   const user = await UserModel.get(username);

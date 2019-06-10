@@ -1,4 +1,4 @@
-import {Router} from "express";
+import { Router } from "express";
 import verifySession from "../../middlewares/session";
 import bedkom from "./bedkom";
 import changePassword from "./changePassword";

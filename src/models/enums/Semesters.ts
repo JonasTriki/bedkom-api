@@ -1,4 +1,1 @@
-export default [
-    "spring",
-    "autumn",
-];
+export default ["spring", "autumn"];

@@ -4,12 +4,12 @@ export default {
     type: "object",
     properties: {
       name: {
-        type: "string",
+        type: "string"
       },
       details: {
-        type: "string",
-      },
+        type: "string"
+      }
     },
-    required: ["name", "details"],
-  },
+    required: ["name", "details"]
+  }
 };

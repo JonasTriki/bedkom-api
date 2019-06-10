@@ -1,11 +1,10 @@
-import {Router} from "express";
-import {Article} from "../../../models/Article";
+import { Router } from "express";
+import { Article } from "../../../models/Article";
 import responses from "../../../responses";
 
 const router = Router();
 
 router.get("/", (req, res) => {
-
   // TODO: Implement other endpoints (such as create, remove, edit, comment, etc.).
   // For now, just display static data.
   const published = new Date(2019, 4, 29, 11, 0, 0);
@@ -18,7 +17,7 @@ router.get("/", (req, res) => {
       authorId: "jtr008",
       datePublished: published,
       dateModified: modified,
-      content: "😎",
+      content: "😎"
     },
     {
       id: "article-1",
@@ -27,7 +26,7 @@ router.get("/", (req, res) => {
       authorId: "jtr008",
       datePublished: published,
       dateModified: modified,
-      content: "Masse tekst her...",
+      content: "Masse tekst her..."
     }
   ];
 

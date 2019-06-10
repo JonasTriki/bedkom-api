@@ -1,4 +1,4 @@
-import {Schema} from "dynamoose";
+import { Schema } from "dynamoose";
 import jsonschema from "jsonschema";
 import db from "../db";
 import ContactPersons from "../jsonschemas/ContactPersons";
@@ -19,37 +19,39 @@ export interface Company {
   contactPersons: ContactPerson[];
 }
 
-const CompanyModel = db.model<Company, string>("bedkom-companies", new Schema({
-  id: {
-    type: String,
-    required: true,
-    hashKey: true
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true
-  },
-  website: {
-    type: String,
-    required: true,
-  },
-  bannerImgUrl: {
-    type: String,
-    required: true
-  },
-  contactPersons: {
-    type: [Object],
-    required: true,
-    validate: (vals: object[]) => {
-
-      // Makes sure that our contact person is valid.
-      return jsonschema.validate(vals, ContactPersons).valid;
+const CompanyModel = db.model<Company, string>(
+  "bedkom-companies",
+  new Schema({
+    id: {
+      type: String,
+      required: true,
+      hashKey: true
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    description: {
+      type: String,
+      required: true
+    },
+    website: {
+      type: String,
+      required: true
+    },
+    bannerImgUrl: {
+      type: String,
+      required: true
+    },
+    contactPersons: {
+      type: [Object],
+      required: true,
+      validate: (vals: object[]) => {
+        // Makes sure that our contact person is valid.
+        return jsonschema.validate(vals, ContactPersons).valid;
+      }
     }
-  },
-}));
+  })
+);
 
 export default CompanyModel;

@@ -1,5 +1,5 @@
-import {NextFunction, Request, Response, Router} from "express";
-import {isPermitted} from "../../../models/enums/UserRoles";
+import { NextFunction, Request, Response, Router } from "express";
+import { isPermitted } from "../../../models/enums/UserRoles";
 import MenuModel from "../../../models/Menu";
 import responses from "../../../responses";
 
@@ -13,16 +13,15 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get("/", async (req: Request, res: Response) => {
-    try {
+  try {
+    // List out the menus
+    const menus = await MenuModel.scan().exec();
 
-        // List out the menus
-        const menus = await MenuModel.scan().exec();
-
-        // Return with all menus
-        responses.ok(menus, res);
-    } catch (err) {
-        responses.unexpectedError(req, res);
-    }
+    // Return with all menus
+    responses.ok(menus, res);
+  } catch (err) {
+    responses.unexpectedError(req, res);
+  }
 });
 
 export default router;

@@ -1,4 +1,4 @@
-import {Router} from "express";
+import { Router } from "express";
 import list from "./list";
 
 const router = Router();
